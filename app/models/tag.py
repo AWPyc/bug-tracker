@@ -18,4 +18,4 @@ class Tag(Base):
     name = Column(String, nullable=False)
 
     bug_id = Column(Integer, ForeignKey("bugs.id"))
-    bug = relationship("Bug", back_populates="bugs")
+    bug = relationship("Bug", back_populates="tags")

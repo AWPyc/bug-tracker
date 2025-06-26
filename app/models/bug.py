@@ -21,6 +21,7 @@ class Bug(Base):
         status (str): Current bug status.
         priority (str): Priority level of the bug.
         severity (str): Severity level of the bug.
+        submitter (str): User reporting the bug.
         created_at (datetime): The time bug record was created.
         updated_at (datetime): The time bug record was modified.
         tags (list[str]): Corresponding tags to the bug record.

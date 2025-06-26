@@ -29,9 +29,9 @@ class BugCreate(BaseModel):
     status: Status
     priority: Priority
     severity: Severity
+    submitter: str | None
     assigned_to: str | None
     tags: List[str] | None
-    submitter: str | None
 
 class BugResponse(BaseModel):
     id: int
