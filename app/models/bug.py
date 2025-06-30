@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
 
 from app.db.session import Base
@@ -9,6 +9,9 @@ from sqlalchemy import (
     String,
     DateTime,
 )
+
+from app.schemas.bug import Status, Priority, Severity
+
 
 class Bug(Base):
     """
@@ -31,9 +34,9 @@ class Bug(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
-    status = Column(String, nullable=False)
-    priority = Column(String, nullable=False)
-    severity = Column(String, nullable=False)
+    status = Column(SQLAlchemyEnum(Status), nullable=False)
+    priority = Column(SQLAlchemyEnum(Priority), nullable=False)
+    severity = Column(SQLAlchemyEnum(Severity), nullable=False)
     assigned_to = Column(String, nullable=True)
     submitter = Column(String, nullable=False, default="???")
     created_at = Column(DateTime, default=datetime.now())
