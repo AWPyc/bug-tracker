@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
-
+from app.models.association import bug_tags
 from app.db.session import Base
 from sqlalchemy import (
     Column,
@@ -38,9 +38,9 @@ class Bug(Base):
     priority = Column(SQLAlchemyEnum(Priority), nullable=False)
     severity = Column(SQLAlchemyEnum(Severity), nullable=False)
     assigned_to = Column(String, nullable=True)
-    submitter = Column(String, nullable=False, default="???")
-    created_at = Column(DateTime, default=datetime.now())
-    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
+    submitter = Column(String, nullable=False, default="system")
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
-    tags = relationship("Tag", back_populates="bug", cascade="all, delete-orphan")
+    tags = relationship("Tag", secondary=bug_tags, back_populates="bugs")
 

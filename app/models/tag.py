@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-
+from app.models.association import bug_tags
 from app.db.session import Base
 
 class Tag(Base):
@@ -10,12 +10,10 @@ class Tag(Base):
     Attributes:
         id (int): Primary key for the tag.
         name (str): Name of the tag.
-        bug_id (int): Foreign key to corresponding bug record.
     """
     __tablename__ = "tags"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    name = Column(String, unique=True, nullable=False)
 
-    bug_id = Column(Integer, ForeignKey("bugs.id"))
-    bug = relationship("Bug", back_populates="tags")
+    bugs = relationship("Bug", secondary=bug_tags, back_populates="tags")

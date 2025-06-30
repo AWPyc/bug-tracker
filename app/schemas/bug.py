@@ -1,7 +1,8 @@
 from typing import List, Annotated
-from pydantic import BaseModel, AfterValidator
+from pydantic import BaseModel, AfterValidator, Field, model_validator, ValidationError, ConfigDict
 from enum import Enum
 from datetime import datetime
+from pydantic_core import PydanticUndefined
 
 from app.utils.validators import (
     title_must_not_be_empty,
@@ -9,27 +10,28 @@ from app.utils.validators import (
 )
 
 class Status(str, Enum):
-    OPEN=1
-    CLOSED=2
-    IN_PROGRESS=3
+    OPEN="OPEN"
+    CLOSED="CLOSED"
+    IN_PROGRESS="IN PROGRESS"
 
 class Priority(str, Enum):
-    LOW=1
-    MEDIUM=2
-    HIGH=3
+    LOW="LOW"
+    MEDIUM="MEDIUM"
+    HIGH="HIGH"
 
 class Severity(str, Enum):
-    MINOR=1
-    MAJOR=2
-    CRITICAL=3
+    MINOR="MINOR"
+    MAJOR="MAJOR"
+    CRITICAL="CRITICAL"
 
 class TagCreate(BaseModel):
-    id: int
     name: Annotated[str, AfterValidator(tag_name_must_not_be_empty)]
 
 class TagResponse(BaseModel):
     id: int
     name: str
+
+    model_config = ConfigDict(from_attributes=True)
 
 class BugCreate(BaseModel):
     title: Annotated[str, AfterValidator(title_must_not_be_empty)]
@@ -54,5 +56,21 @@ class BugResponse(BaseModel):
     assigned_to: str | None
     tags: List[TagResponse] | None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+
+class BugUpdate(BaseModel):
+    title: Annotated[str, AfterValidator(title_must_not_be_empty)] = Field(default=PydanticUndefined)
+    description: Annotated[str, AfterValidator(description_must_not_be_empty)] = Field(default=PydanticUndefined)
+    status: Status | None = None
+    priority: Priority | None = None
+    severity: Severity | None = None
+    submitter: str | None = None
+    assigned_to: str | None = None
+    tags: List[str] | None = None
+
+    @model_validator(mode="before")
+    def at_leats_one_field(cls, values):
+        if not values or all(v is None for v in values.values()):
+            raise ValidationError("PATCH request requires at least one field to update!")
+        return values
