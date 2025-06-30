@@ -10,7 +10,6 @@ from datetime import datetime
 import logging
 
 def create_bug(bug: BugCreate) -> Bug:
-
     with SessionLocal() as session:
         try:
             bug_record = Bug(
@@ -23,20 +22,19 @@ def create_bug(bug: BugCreate) -> Bug:
                 created_at=datetime.now(),
                 updated_at=datetime.now()
             )
-            session.add(bug_record)
             if bug.tags:
                 for tag in bug.tags:
-                    tag_record = Tag(name=tag, bug_id=bug_record.id)
-                    session.add(tag_record)
+                    tag_record = Tag(name=tag)
+                    bug_record.tags.append(tag_record)
+            session.add(bug_record)
             session.commit()
-            session.refresh(bug_record)
         except SQLAlchemyError as e:
             logging.error(f"Unable to create Bug record: {e}. Rolling back.")
             session.rollback()
             raise e
     return bug_record
 
-def get_all_bugs() -> List[BugResponse]:
+def get_all_bugs() -> List[Bug]:
     with SessionLocal() as session:
         try:
             bugs_list = session.query(Bug).options(joinedload(Bug.tags)).all()
@@ -44,3 +42,13 @@ def get_all_bugs() -> List[BugResponse]:
         except SQLAlchemyError as e:
             logging.error(f"Unable to fetch Bug records {e}.")
             raise e
+
+def get_bug_by_id(bug_id: int) -> Bug:
+    with SessionLocal() as session:
+        try:
+            bug = session.query(Bug).options(joinedload(Bug.tags)).filter(Bug.id == bug_id).first()
+            return bug
+        except SQLAlchemyError as e:
+            logging.error(f"Unable to fetch Bug record with ID:{bug_id}")
+            raise e
+

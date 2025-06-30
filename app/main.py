@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from app.db.init_db import init_db
 from app.routers import bug_router
 
+import logging
+logging.basicConfig(level=logging.INFO)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
