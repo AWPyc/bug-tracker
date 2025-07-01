@@ -1,11 +1,10 @@
 from typing import List
-
 from fastapi import HTTPException, Depends
 from fastapi import APIRouter
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.schemas.bug import BugResponse, BugCreate, BugUpdate
-from app.services.bug import create_bug, get_all_bugs, get_bug_by_id, update_bug_partial, update_bug_full
+from app.services.bug import create_bug, get_all_bugs, get_bug_by_id, update_bug_partial, update_bug_full, delete_bug
 
 router = APIRouter()
 
@@ -24,7 +23,7 @@ def create_bug_endpoint(bug: BugCreate, session: Session = Depends(get_db)) -> B
     new_bug = create_bug(session, bug)
     return new_bug
 
-@router.get("/bugs", response_model=List[BugResponse])
+@router.get("/bugs", response_model=List[BugResponse], status_code=200)
 def get_all_bugs_endpoint(session: Session = Depends(get_db)) -> List[BugResponse]:
     """
     Retrieve all bug records.
@@ -92,3 +91,20 @@ def update_bug_full_endpoint(bug_id: int, bug_data: BugCreate, session: Session 
         BugResponse: Bug data.
     """
     return update_bug_full(session, bug_id, bug_data)
+
+@router.delete("/bug/{bug_id}", status_code=204)
+def delete_bug_endpoint(bug_id: int, session: Session = Depends(get_db)) -> None:
+    """
+    Delete a bug record.
+
+    Args:
+        bug_id (int): ID of the bug.
+        session (Session, optional): DB session.
+
+    Raises:
+        HTTPException: If bug not found.
+
+    Returns:
+        None.
+    """
+    delete_bug(session, bug_id)

@@ -170,3 +170,29 @@ def update_bug_full(session: Session, bug_id: int, bug_data: BugCreate) -> Bug:
 
     return bug_from_db
 
+def delete_bug(session: Session, bug_id: int) -> None:
+    """
+    Delete Bug record from the database. (Does not delete related Tag objects - only references).
+
+    Args:
+        bug_id (int): ID of the bug.
+        session (Session, optional): DB session.
+
+    Raises:
+        HTTPException: If bug not found.
+
+    Returns:
+        None.
+    """
+    try:
+        bug_from_db = get_bug_by_id(session, bug_id)
+        if not bug_from_db:
+            raise HTTPException(status_code=404, detail=f"Bug with ID:{bug_id} not found!")
+
+        bug_from_db.tags.clear()
+        session.delete(bug_from_db)
+        session.commit()
+    except SQLAlchemyError as e:
+        session.rollback()
+        logging.error(f"Unable to DELETE Bug record with ID:{bug_id}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
