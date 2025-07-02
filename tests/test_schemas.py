@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas.bug import BugCreate, Status, Priority, Severity
+from app.schemas.bug import BugCreate, Status, Priority, Severity, BugUpdate
 
 
 def test_create_bug_valid():
@@ -49,3 +49,7 @@ def test_create_bug_invalid_whitespace_title():
         tags=None,
         submitter=None
         )
+
+def test_patch_bug_fails_if_no_fields():
+    with pytest.raises(ValueError, match="PATCH request requires at least one field to update!"):
+        BugUpdate.model_validate({})

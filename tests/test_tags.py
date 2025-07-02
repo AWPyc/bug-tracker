@@ -1,0 +1,21 @@
+import pytest
+from tests.conftest import client
+from tests.test_bugs import bugCreate
+
+def test_get_all_tags(client):
+    response_get = client.get("/tags")
+    assert response_get.status_code == 200
+
+def test_tag_duplicate(client):
+    bugCreate.tags = ["test"]
+
+    for _ in range(0, 2):
+        response_post = client.post("/bugs", json=bugCreate.model_dump())
+        assert response_post.status_code == 201
+
+    request_get = client.get("/tags")
+    assert request_get.status_code == 200
+
+    tag_data = request_get.json()
+    assert len(tag_data) == 1
+    assert any(tag["name"] == "test" for tag in tag_data)

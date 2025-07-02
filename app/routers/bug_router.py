@@ -74,7 +74,7 @@ def update_bug_partial_endpoint(bug_id: int, bug_data: BugUpdate, session: Sessi
     """
     update_bug_partial(session, bug_id, bug_data)
 
-@router.put("/bug/{bug_id}", status_code=200)
+@router.put("/bug/{bug_id}", response_model=BugResponse, status_code=200)
 def update_bug_full_endpoint(bug_id: int, bug_data: BugCreate, session: Session = Depends(get_db)) -> BugResponse:
     """
     Fully update a bug record (replace all fields).
