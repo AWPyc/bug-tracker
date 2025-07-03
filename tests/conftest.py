@@ -28,3 +28,10 @@ def client():
     yield TestClient(app)
     Base.metadata.drop_all(bind=engine)
 
+@pytest.fixture(scope="function")
+def session_client(): # to moj hanlder który dodałem
+    Base.metadata.create_all(bind=engine)
+    with SessionLocal() as session:
+        yield session
+    Base.metadata.drop_all(bind=engine)
+

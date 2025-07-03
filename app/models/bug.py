@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import relationship
 from app.models.association import bug_tags
@@ -39,8 +39,7 @@ class Bug(Base):
     severity = Column(SQLAlchemyEnum(Severity), nullable=False)
     assigned_to = Column(String, nullable=True)
     submitter = Column(String, nullable=False, default="system")
-    created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-
+    created_at = Column(DateTime(timezone=True), default=datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=datetime.now(timezone.utc))
     tags = relationship("Tag", secondary=bug_tags, back_populates="bugs")
 
