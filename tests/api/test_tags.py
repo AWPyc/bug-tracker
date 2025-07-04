@@ -1,6 +1,5 @@
-import pytest
 from tests.conftest import client
-from tests.test_bugs import bug_create
+from tests.api.test_bugs import bug_create
 
 def test_get_all_tags(client):
     response_get = client.get("/tags")
