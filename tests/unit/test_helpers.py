@@ -1,10 +1,6 @@
-import sqlite3
 import time
 import pytest
 from datetime import datetime
-
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-
 from app.models.bug import Bug
 from app.models.tag import Tag
 from app.schemas.bug import BugCreate, Status, Priority, Severity, BugUpdate
