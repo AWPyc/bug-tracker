@@ -1,13 +1,12 @@
 import logging
-
+from typing import List
 from fastapi import HTTPException
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-
 from app.models.tag import Tag
 
 
-def get_all_tags(session: Session):
+def get_all_tags(session: Session) -> List[Tag]:
     """
     Retrieve all tag records.
 
@@ -15,7 +14,7 @@ def get_all_tags(session: Session):
         session (Session, optional): DB session.
 
     Returns:
-        List[TagResponse]: List of all bugs or empty list if none exist.
+        List[Tag]: List of all bugs or empty list if none exist.
     """
     try:
         tags_list_db = session.query(Tag).all()
