@@ -5,14 +5,11 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     services:
       db:
         image: postgres:15
         ports: ['5432:5432']
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           POSTGRES_USER: ${{ secrets.DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
           POSTGRES_DB: testdb
@@ -40,4 +37,6 @@ jobs:
         run: ruff check . --exit-zero
 
       - name: Run pytest
-        run: pytest --max_fail=1 --disable-warnings
+        env:
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        run: pytest --maxfail=1 --disable-warnings

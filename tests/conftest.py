@@ -9,11 +9,11 @@ from app.db.session import get_db, Base
 from dotenv import load_dotenv
 
 load_dotenv()
-SQLALCHEMY_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
+TEST_DB = os.getenv("TEST_DATABASE_URL")
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL
-)
+if not TEST_DB:
+    raise ValueError("TEST_DATABASE_URL is not set")
+engine = create_engine(TEST_DB)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
