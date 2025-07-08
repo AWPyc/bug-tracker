@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload, Session
 from app.models.bug import Bug
 from app.models.tag import Tag
-from app.schemas.bug import BugCreate, BugUpdate, BugResponse
+from app.schemas.bug import BugCreate, BugUpdate
 import logging
 
 from app.services.helpers import apply_bug_data_to_model, Operation, assign_tags_to_bug
@@ -148,7 +148,7 @@ def update_bug_full(session: Session, bug_id: int, bug_data: BugCreate) -> Bug:
         HTTPException: If bug not found or DB error occurs.
 
     Returns:
-        BugResponse: BugResponse schema with updated data.
+        Bug: The updated Bug ORM object.
     """
     try:
         bug_from_db = get_bug_by_id(session, bug_id)

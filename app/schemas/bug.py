@@ -1,5 +1,5 @@
 from typing import List, Annotated, Optional
-from pydantic import BaseModel, AfterValidator, model_validator, ValidationError, ConfigDict
+from pydantic import BaseModel, AfterValidator, model_validator, ConfigDict
 from enum import Enum
 from datetime import datetime
 

@@ -7,7 +7,6 @@ from app.schemas.bug import BugCreate, Status, Priority, Severity, BugUpdate
 from app.services.bug import get_bug_by_id
 from app.services.helpers import apply_bug_data_to_model, assign_tags_to_bug, Operation
 from app.services.tag import get_all_tags
-from tests.conftest import session_client
 
 bug_create = BugCreate(
         title="Test title",

@@ -37,7 +37,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run lint (ruff)
-        run: ruff . --exit-zero
+        run: ruff check . --exit-zero
 
       - name: Run pytest
         run: pytest --max_fail=1 --disable-warnings

@@ -4,7 +4,6 @@ from app.schemas.bug import Status, Priority, Severity
 from app.services.bug import sync_tags, get_bug_by_id
 from app.services.helpers import Operation
 from app.services.tag import get_all_tags
-from tests.conftest import session_client
 
 @pytest.mark.parametrize(
     ("bug_orm", "tags", "expected_tags", "expected_ids"),

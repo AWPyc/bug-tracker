@@ -1,6 +1,5 @@
 import pytest
 from app.schemas.bug import Status, Priority, Severity, BugCreate, BugUpdate
-from tests.conftest import client
 
 bug_create = BugCreate(
         title="Test title",

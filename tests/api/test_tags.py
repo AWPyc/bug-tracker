@@ -1,4 +1,4 @@
-from tests.conftest import client
+
 from tests.api.test_bugs import bug_create
 
 def test_get_all_tags(client):
