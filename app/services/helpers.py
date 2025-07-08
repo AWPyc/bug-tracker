@@ -25,7 +25,7 @@ def apply_bug_data_to_model(bug_obj: Bug, data: Optional[BugCreate | BugUpdate],
     """
     if operation == Operation.PATCH:
         data_dict = data.model_dump(exclude_unset=True)
-        bug_obj.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
+        bug_obj.updated_at = datetime.now(timezone.utc)
     else:
         data_dict = data.model_dump()
 
